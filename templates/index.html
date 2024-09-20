@@ -1,0 +1,427 @@
+<!-- Updated index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Generation App</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .box {
+            margin-top: 10px;
+            padding: 100px;
+            border: 3px solid #050101;
+            overflow: hidden;
+        }
+
+        html {
+            margin: 0;
+            font-family: sans-serif;
+            background-color: whitesmoke;
+        }
+
+        .content {
+            margin: 0 auto;
+            width: 500px;
+        }
+
+        form {
+            display: table;
+        }
+
+        p {
+            display: table-row;
+        }
+
+        label {
+            display: table-cell;
+        }
+
+        input {
+            display: table-cell;
+        }
+
+        @media (max-width: 600px) {
+            table {
+                width: 90%;
+            }
+
+            /* Additional styles for smaller screens */
+        }
+
+        input {
+            margin-bottom: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            width: 100px;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            opacity: 1;
+            transition: 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            opacity: 2;
+        }
+
+
+
+        .center {
+            border: 5px solid;
+            margin: auto;
+            border-color: #4caf50;
+            width: 50%;
+            padding: 10px;
+            border-radius: 25px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .table_center {
+            margin: auto;
+            width: 50%;
+
+            padding: 10px;
+
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .submit_button {
+            margin-left: 10%;
+        }
+
+        td {
+            padding: 60px;
+        }
+
+        .empty-box-left {
+            position: relative;
+            width: 380px;
+            height: 180px;
+            border: 3px solid #57C870;
+            border-radius: 25px;
+        }
+
+        .empty-box-right {
+            position: relative;
+            width: 380px;
+            height: 180px;
+            border: 3px solid #57C870;
+            border-radius: 25px;
+        }
+
+        .empty-box-left::before {
+            content: "Generate by Question";
+            position: absolute;
+            top: -13px;
+            /* Adjust the position based on your design */
+            left: 33%;
+            transform: translateX(-50%);
+            background-color: whitesmoke;
+            /* Set the background color to match the container */
+            padding: 0 10px;
+            /* Adjust padding as needed */
+        }
+
+        .empty-box-right::before {
+            content: "Generate by File";
+            position: absolute;
+            top: -13px;
+            /* Adjust the position based on your design */
+            left: 30%;
+            transform: translateX(-50%);
+            background-color: whitesmoke;
+            /* Set the background color to match the container */
+            padding: 0 10px;
+            /* Adjust padding as needed */
+        }
+
+        .inside_box {
+            padding-left: 30px
+        }
+
+
+        #code_writer_firstline {
+            font-size: 50px;
+        }
+
+        #code_writer_secondline {
+            color: gray;
+        }
+
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: block;
+        }
+
+        .input_field_width {
+            width: 260px;
+        }
+
+        /* Optional: Increase spacing between cells (td elements) within the same row */
+        /*td {
+            border: 1px solid #ddd;
+            padding-right: 80px;
+            /* Adjust the right padding as needed */
+    </style>
+</head>
+
+<body>
+
+    <div style="text-align: center;">
+        <h1"> </h1>
+        <img src='static/code_writer_logo.png' width='60px' height='60px' style="text-align:center;">
+        <h1 id="code_writer_firstline">Code Writer</h1>
+        <h2 id="code_writer_secondline">Harnessing ChatGPT for Code Generation</h2>
+        <button id="start_button" class="button" type="button" onclick="start_using_software()">Start &#8594</button>
+
+    </div>
+
+
+
+    <table class="table_center" id="main_table">
+        <tr>
+            <td>
+                <div class="empty-box-left">
+                    <br>
+                    <div class="inside_box">
+                        <p>
+                            <label for="userInput">Question:</label>
+                            <input type="text" id="userInput" name="userInput"
+                                placeholder="Please enter your requirements here" class="input_field_width">
+                        </p>
+                        <p>
+                            <label for="userInput">Models:</label>
+                            <input type="text" id="userId" list="userId_list" name="userId" onchange="question_models()"
+                                placeholder="Please select your models here" class="input_field_width">
+                        </p>
+
+                        <div style="padding-left:230px">
+                            <button class="button" type="button" onclick="processleft()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </td>
+
+
+            <td>
+                <div class="empty-box-right">
+                    <br>
+                    <div class="inside_box">
+                        <p>
+                            <label for="userInput">Path:</label>
+                            <input type="text" id="userInput" name="userInput"
+                                placeholder="Please enter the local path of your file" class="input_field_width">
+                        </p>
+                        <p>
+                            <label for="userInput">Models:</label>
+                            <input type="text" id="file_model_input" list="userId_list" name="userId" onchange="file_models()"
+                                placeholder="Please select your models here" class="input_field_width">
+
+                        </p>
+                        <div style="padding-left:218px">
+                            <p>
+                                <button class="button" type="button" onclick="processright()">Submitt</button>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+
+        <datalist id="userId_list">
+            <option>Zero (No team)</option>
+            <option>Only tran</option>
+            <option>Only pair programming</option>
+            <option>Detail Tranditional</option>
+            <option>Loop for Simple Tranditional</option>
+            <option>Loop for Detail Tranditional</option>
+            <option>Loop for Pair programming</option>
+            <option>Few-shots: Pair programming</option>
+            <option>Few-shots: Pair programming & nl</option>
+            <option>Few-shots: Tranditional</option>
+            <option>Few-shots: Tranditional & nl</option>
+        </datalist>
+
+        <datalist id="path_selection">
+            <option>Path</option>
+            <option>Question</option>
+
+        </datalist>
+    </table>
+
+    <br>
+    <div id="picture_container"></div>
+    <script>
+        function question_models() {
+            let input_value = $('#userId').val();
+
+            //var newBox = $('<div class="box">you selected abbababa</div>');
+            var image_holder = "<div class = 'center'><img src='static/ChatGPT.png' width='40px' height = '40px'>ChatGPT Model...<br>";
+            if (input_value == 'Only tran' || input_value == 'Detail Tranditional' || input_value == 'Few-shots: Tranditional' || input_value == 'Few-shots: Tranditional & nl') {
+                var pictureContainer = $('#picture_container');
+                //var newBox = "<img src='static/tran0.png' width='600px'>";
+                //var newBox = "<div class = 'center'><img src='static/ChatGPT.png' width='100%' height = '100%'></div>";
+                var newBox = "<img src='static/tran0.png' width='100%' height = '100%'></div>";
+                //"<img src='static/pair1.png' width='600px'>"
+
+                pictureContainer.append(image_holder + newBox);
+            }
+            if (input_value == 'Only pair programming' || input_value == 'Few-shots: Pair programming' || input_value == 'Few-shots: Pair programming & nl') {
+                var pictureContainer = $('#picture_container');
+                var newBox = "<img src='static/pair0.png' width='100%' height = '100%'></div>";
+                //"<img src='static/pair1.png' width='600px'>"
+                pictureContainer.append(image_holder + newBox);
+            }
+            if (input_value == 'Loop for Simple Tranditional' || input_value == 'Loop for Detail Tranditional') {
+                var pictureContainer = $('#picture_container');
+                var newBox = "<img src='static/tran1.png' width='100%' height = '100%'></div>";
+                //"<img src='static/pair1.png' width='600px'>"
+                pictureContainer.append(image_holder + newBox);
+            }
+            if (input_value == 'Loop for Pair programming') {
+                var pictureContainer = $('#picture_container');
+                var newBox = "<img src='static/pair1.png' width='100%' height = '100%'></div>";
+                //"<img src='static/pair1.png' width='600px'>"
+                pictureContainer.append(image_holder + newBox);
+            }
+        }
+
+        function file_models() {
+            let input_value = $('#file_model_input').val();
+
+            //var newBox = $('<div class="box">you selected abbababa</div>');
+            var image_holder = "<div class = 'center'><img src='static/ChatGPT.png' width='40px' height = '40px'>ChatGPT Model...<br>";
+            if (input_value == 'Only tran' || input_value == 'Detail Tranditional' || input_value == 'Few-shots: Tranditional' || input_value == 'Few-shots: Tranditional & nl') {
+                var pictureContainer = $('#picture_container');
+                //var newBox = "<img src='static/tran0.png' width='600px'>";
+                //var newBox = "<div class = 'center'><img src='static/ChatGPT.png' width='100%' height = '100%'></div>";
+                var newBox = "<img src='static/tran0.png' width='100%' height = '100%'></div>";
+                //"<img src='static/pair1.png' width='600px'>"
+
+                pictureContainer.append(image_holder + newBox);
+            }
+            if (input_value == 'Only pair programming' || input_value == 'Few-shots: Pair programming' || input_value == 'Few-shots: Pair programming & nl') {
+                var pictureContainer = $('#picture_container');
+                var newBox = "<img src='static/pair0.png' width='100%' height = '100%'></div>";
+                //"<img src='static/pair1.png' width='600px'>"
+                pictureContainer.append(image_holder + newBox);
+            }
+            if (input_value == 'Loop for Simple Tranditional' || input_value == 'Loop for Detail Tranditional') {
+                var pictureContainer = $('#picture_container');
+                var newBox = "<img src='static/tran1.png' width='100%' height = '100%'></div>";
+                //"<img src='static/pair1.png' width='600px'>"
+                pictureContainer.append(image_holder + newBox);
+            }
+            if (input_value == 'Loop for Pair programming') {
+                var pictureContainer = $('#picture_container');
+                var newBox = "<img src='static/pair1.png' width='100%' height = '100%'></div>";
+                //"<img src='static/pair1.png' width='600px'>"
+                pictureContainer.append(image_holder + newBox);
+            }
+        }
+        function processleft() {
+
+            var userInput = $('#read_file').val();
+            var userid = $('#userId').val();
+            //var userselection = $('#userselect').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/process_text',
+                data: { user_input: userInput, user_id: userid},//, user_path: userselection },
+                success: function (response) {
+                    displayText(response.result);
+                }
+            });
+        }
+
+        function processright() {
+            var userInputPath = $('#userInput').val();
+            var model_selection = $('#file_model_input').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/process_text',
+                data: { 
+                    user_input_path: userInputPath,
+                    user_id: model_selection
+                },
+                success: function (response) {
+                    displayText(response.result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Ajax error:', error);
+                }
+            });
+        }
+
+
+        function displayText(text) {
+            // Ensure 'text' is valid before proceeding
+            if (typeof text !== 'string' || text.length === 0) {
+                console.error('Invalid or empty text provided to displayText.');
+                return; // Exit the function if text is invalid
+            }
+            var image_holder = "<div class = 'center'><img src='static/ChatGPT.png' width='40px' height = '40px'>ChatGPT Model...</div><br>";
+            var resultContainer = $('#resultContainer');
+            var newBox = $('<div class="box">'+image_holder+'</div>');
+            resultContainer.append(newBox);
+
+            var index = 0;
+
+            function appendChar() {
+                if (index < text.length) {
+                    newBox.text(newBox.text() + text[index]);
+                    index++;
+                    setTimeout(appendChar, 50); // Adjust the delay based on your preference
+                }
+            }
+
+            appendChar();
+        }
+
+        function start_the_page() {
+            document.getElementById("main_table").style.visibility = "hidden";
+        }
+
+        const start_using_software = () => {
+            document.getElementById("main_table").style.visibility = "visible";
+            document.getElementById("start_button").style.visibility = "hidden";
+
+
+        }
+
+        window.onload = start_the_page;
+
+    </script>
+
+</body>
+
+</html>
